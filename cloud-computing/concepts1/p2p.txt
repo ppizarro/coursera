@@ -1,0 +1,145 @@
+# Peer-To-Peer
+ - first distributed systems that seriously focused on scalability with respect to number of nodes
+
+ - Napster
+ - Gnutella
+ - Fasttrack (Kazaa, KazaaLite, Grokster)
+ - BitTorrent
+
+ - consistent hash:
+  - Cassandra
+  - Riak
+  - Voldermort (linkedIn)
+  - DynamoDB (Amazon)
+
+ - P2P Properties:
+  - Chord
+  - Pastry
+  - Kelips
+
+## Napster
+
+ - Clients store their own files
+ - Server only save information/location about files
+ - Use ternary tree: three children
+ - Server high load with queries
+
+## Gnutella
+
+ - first fully distributed peer to peer system
+ - Clients store their own files
+ - Eliminate the servers
+ - Client machines search and retrieve amongst thenselves
+ - Clients act as servers too, called servents
+ - Also store "peer pointers" - Overlay Graph
+
+ - 5 kinds of messages:
+  * Query: search
+  * QueryHit: response to query
+  * Ping: to probe network for other peers
+  * Pong: reply to ping, contains address of another peer
+  * Push: use to initiate file transfer
+
+  - Query's flooded out, ttl-restricted, forwarded only once
+  - Peers keeps track of the recent query messages it has received
+  - It also keeps track of which of its neighboring peers it received this query message from
+
+### Problems
+
+ - Large number of freeloaders: only download files, never upload files through the p2p system
+ - High traffic of flood query messages
+
+## FastTrack 
+
+ - Hybrid between Gnutella and Napster
+ - Supernodes: store directory listing
+ - Supernode changes over time
+ - Any peer can become a supernode, it has earned enough reputation 
+
+## BitTorrent
+
+ - seed: full file
+ - leecher: has some blocks
+ - Tracker: per file - receives heartbeats, join and leaves from peers
+ - Local Rarest First block policy: prefere early download of blocks that are least replicated among neighbors
+
+ ## Chord
+
+ - Distribute Hash Table - DST
+
+ - Performance Concerns:
+    * Load balancing
+    * Fault-tolerance
+    * Efficiency of lookups and inserts
+    * Locality: message sent to nodes closer
+
+! Protocol  ! Memory            ! Lookup Latency    ! #Messages for a lookup    !
+! Napster   ! O(1) O(N)@server  ! O(1)              ! O(1)                      !
+! Gnutella  ! O(N)              ! O(N)              ! O(N)                      !
+! Chord     ! O(Log(N))         ! O(Log(N))         ! O(Log(N))                 !
+
+ - Chord use Consistent Hashing on node's (peer's) address:
+    * sha-1(ip_address,port) function (single hash algorithm) -> output 160 bits
+    * Truncate m bits
+    * Called peer id (number between 0 and 2^m - 1)
+    * Not unique but id conflicts very unlikely
+    * Can then map peers to one of 2^m logical points on a circle
+
+ - Peer Pointers: are just successors of each node (ip_addres,port)
+ - Peer Pointers: finger tables: m entries  on the table
+    * ith entry at peer with id n is first peer with id >= n + 2^i(mod 2^m)
+
+ - Filenames also mapped using same consistent hash function
+  * SHA-1(filename) -> 160 bits (key)
+  * File is stored at first peer with id greater than its key (mod 2^m)
+ 
+ - Search
+  * At node n, send query for key K to largest successor/finger entry <= K
+  * if none exist, send query to successor(n)
+
+ - Failure a node - solution maintain r multiple successor entries. In case of failure use successor entries to route query
+  * r=2log(n) suffices to maintain lookup correctness w.h.p(i.e., ring connected)
+    - 50% of nodes fail
+    - Pr (at given node, at least one successor alive) = 1-1/n²
+    - Pr (above is true at all alive nodes) = (1-1/n²)^(n/2)=e^(-1/2n) => 1 (for a large n)
+
+ - Failure a node that containt a file - replicate file/key at r successors and predecessors
+
+ - Stabilization protocol - update successor / finger tables / keys to join/leave/failure nodes
+  * O(N²) messages rounds to estabilish
+
+# Pastry
+
+ - Leaf Set: each node knows its successor(s) and predecessor(s)
+ - Routing tables based prefix matching - log(n)
+
+# Kelips
+
+ - constant lookup cost
+ - affinity groups instead ring
+ - k = # affinity groups = square root N (# of peers)
+ - each node hashed to a group sha1(ip) % k
+ - nodes neighbors:
+  * (almost) all others nodes in its own affinity group
+  * One contact node per foreign affinity group
+  * each peer has 2*square root(N) contacts
+
+ - files not stored in nodes only store meta-information
+ - decouple file replication/location (outside Kelips) from file quering (in Kelips)
+
+ - Lookup:
+    * hash filename to find affinity group
+    * go to your contact for the file affinity group
+    * failing that try another of your neightbors to find a contact
+
+ - gossip to update memberships
+ - file metadata:
+    * needs to be periodically refreshed from source node
+    * timeout
+
+ - tradeoffs:
+  * Memory vs lookup cost vs background bandwidth (to keep neighbors fresh)
+    - kelips use slightly more memory and background bandwidth than Chord and Pastry
+    - but kelips has a much shorter lookup cost, which is O(1).
+    - Chord and Pastry have O(log(N)) for all memory and lookup. Kelips has O(square root(N)) for memory.
+

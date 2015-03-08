@@ -1,0 +1,49 @@
+# Gossip protocol
+
+Epidemiology [Bailey 75]
+
+## Push
+
+x0 = n; y0 = 1
+
+x + y = n + 1
+
+contact rate = B (beta)
+
+dx/dt = -Bxy
+
+x = n(n+1)/n+e^B(n+1)t
+y = (n+1)/1+ne^-B(n+1)t
+
+B (beta) = b / n
+
+t=clog(n)
+
+y=(n+1)-1/(n^cb-2)
+
+cblog(n) copy messages worst case
+
+- low latency (clog(n) rounds)
+- reliability (1/n^ĉb-2)
+- lightweight (cblog(n)
+
+Fault-tolerance
+
+O(log(n)) = n/2 gets the gossip
+
+## Pull
+
+- It is faster than push
+
+O(log(log(n)))
+
+Hierarchical topology 
+- random gossip targets selection => router load => O(n)
+- fix pick gossip target in your subnet (1-1/ni) => router load => O(1)
+
+Time to disseminate a gossip => O(log(n))
+
+Some implementations: AWS EC2 and S3 cloud, cassandra key-value, NNTP (News Network Transport Protocol)
+
+
+

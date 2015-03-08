@@ -1,0 +1,31 @@
+# Vector timestamps
+
+- Used in key-value stores like Riak
+- Each process uses a vector of integer clocks
+- Suppose there are N process in the group 1...N
+- Each vector has N elements
+- Process i maintains vector Vi[1...N]
+- jth element of vector clock at process i, Vi[j], is i's knowledge of latest events at process j
+
+## Incrementing vector clocks
+ 1) On an instruction or send event at process i, it increments only its ith element of its vector clock
+ 2) Each message carries the send-event's vector timestamp Vmessage[1..N]
+ 3) On receiving a message at process i:
+    Vi[i] = Vi[i] + 1
+    Vi[j] = max(Vmessage[j], Vi[j]) for j != i
+
+## Causally Related
+
+ - VT1 = VT2, iff (if and only if) VT1[i] = VT2[i], for all i = 1,..,N
+
+ - VT1 <= VT2, iff VT1[i] <= VT2[i], for all i = 1,...,N
+
+ - Two events are causally related iff VT1 < VT2, i.e.,
+
+    iff VT1 <= VT2 & there exists j such that 1 <= j <= N & VT1[j] < VT2[j]
+
+## Or Not Causally Related
+
+ - Two events VT1 and VT2 are concurrent iff NOT(VT1 <= VT2) AND NOT(VT2 <= VT1)
+
+ - We'll denote this as VT2 ||| VT1

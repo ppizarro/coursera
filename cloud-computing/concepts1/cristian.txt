@@ -1,0 +1,3 @@
+[t + min2, t + RTT - min1]
+
+error = (RTT - min2 - min1) / 2

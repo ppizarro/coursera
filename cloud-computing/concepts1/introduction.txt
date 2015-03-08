@@ -1,0 +1,33 @@
+What a cloud is?
+
+Cloud = Lots of storage + compute cycles nearby
+
+Moore's Law: CPU compute capacity doubles once about every 18 months
+storage: 12 months
+bandwidth: 9 months
+
+1) Massive scale
+
+WUE - water usage efficiency = Annual Water Usage / IT Equipment Energy (L/kWh)
+PUE = Total Facility Power / IT Equipment Power
+
+2) On-demand access
+
+HaaS
+IaaS
+PaaS
+SaaS
+
+3) Data-intensive Nature
+
+Computation-Intesive Computing: High performance computing, Grids
+Data-Intensive: store data at datacenters and use compute nodes nearby
+-The focus shifts from computation to the data: CPU utilization no longer the most important resource metric, instead I/O is (disk and/or network)
+
+4) New Cloud Programming Paradigms
+
+Single site cloud: To outsource or Own?
+
+- Breakeven points to outsorce
+ * Months > 5.5 (storage) 
+ * Months > 12 (overall)

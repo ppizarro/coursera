@@ -1,0 +1,67 @@
+- Failures are the norm not the exception in datacenters
+
+- Rate of failure of one machine (OS/disk/motherboard/network,etc.) is once every 10 years (120 months) on average.
+- When you have 120 servers in the DC the mean time to failure (MTTF) of the next machine is 1 month.
+- When you have 12000 servers in the DC the MTTF is about once every 7.2 hours!
+
+# Membership Protocol
+
+- Failure Detector Component
+- Dessimination Component
+
+## Failure Detector
+
+- Completeness = each failure detected
+- Accuracy = there is no mistaken detection
+
+Completeness and Accuracy => impossible together in lossy networks
+
+- Speed
+    - Time to first detection of a failure
+
+- Scale
+ - Equal load on each member
+ - Network message load
+
+### Centralized Heartbeating
+ - Se o processo central falhar não detetecta mais e tambem se tem muitos nos sobrecarrega o central
+
+### Ring Heartbeating
+ - Não suporta multiplas falhas simultaneas
+
+### All-To-All Heartbeating
+ - high load = equal load per member
+ - completeness guarantee
+
+# Gossip-style Heartbeating failure detector
+
+- More robust than all-to-all heartbeating
+- Membership list: All node, each for row: Column 1 (address), Column 2 (counter received), Column 3 (local time)
+
+- Sent a membership list to a selected random (gossip) member, update the list
+- If the heartbeat has not increased for more than T(fail) 
+
+Nem all-to-all e nem gossip-style sao optimal.
+Devemos separar a detecção de falha do algoritmo de dessimination.
+
+# Another Probabilistic Failure Detector
+
+SWIM - Scalable Weekly consistent Infection style Membership protocol.
+- Use pigging instead of heartbeating
+- ping: direct path
+- ping-req: indirect path
+- constant first detection time and process load (heartbeat o(n))
+- 2N-1 
+- piggybacking information about membership list
+
+# Dissemination Component
+- Improve false positive
+- Dissemination about a detected failure
+- Dissemination about process that have joined the group
+- Dissemination about process that are going to be leaving the group
+- Piggyback on Failure Detector messages - infection-styles dissemination (SWIM)
+
+- State machine: Alive <- (ACK) -> Suspected <- (timeout) > Failure
+- Suspicion Mechanism: (distinguish multiple suspicions of a process)
+ * Per-process incarnation numbers
+ * Inc # for Pi can be incremented only by Pi - when it receives a suspect message - start dissemination an alive Pi message

@@ -1,0 +1,45 @@
+# Cassandra
+
+ - Key -> server mapping is the Partition
+
+ - Replica Strategy:
+
+ 1. Single Strategy
+    - Use the Partitioner, of which there are two kinds:
+        * Random Partitioner: Chord-like hash partitioning
+        * Byte Order Partitioner: Assigns ranges of keys to servers
+
+ 2. Network Topology Strategy: for multi-DC deployments
+    - Two replicas per DC
+    - Three replicas per DC
+    - Per DC:
+        * First replica placed according to Patitioner
+        * Then go clockwise around ring until you hit a different rack
+
+ - Snitches: mechanism to map IP addresses to racks and data centers
+    * SimpleSnitch: Unaware of Topology (Rack-unaware)
+    * RackInfering: Assumes topology of network by octet of server's IP address
+        - 101.102.103.104 = x.<DC octet>.<rack octet>.<node octet>
+    * PropertyFileSnitch: uses a config file (accurate)
+    * EC2Snitch: uses EC2
+        - EC2 Region = DC
+        - Availability zone = rack
+
+ - Writes: Hinted Handoff mechanism
+    * if any replica is down, the coordinator write to all other replicas and keeps the write locally until down replica comes back up.
+    * When all replicas are down the Coordinator buffers writes (for up to a few hours)
+    * Write-back
+
+ - Bloom Filter
+
+ - Cap Theorem: In a distributed system you can't guarantee all the three properties (only two):
+
+ 1. Consistency: all nodes see same data at any time or reads return latest written value by any client 
+ 2. Availability: the system allows operations all the time, and operations return quickly
+ 3. Partition-tolerance: the system continues work in spite of network partitions
+
+ - Quorums
+    1. W + R > N
+    2. W > N / 2
+
+

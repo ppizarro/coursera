@@ -1,0 +1,3 @@
+(tr1 - tr2 + ts2 - ts 1) / 2
+
+error = (L2-L1)/2 = RTT / 2 (half round trip time)

@@ -1,0 +1,101 @@
+# Global snapshot
+- N process
+- state for each process
+- state for each channel (message, FIFO)
+- there are two uni-directional communication channels between each ordered process pair: Pj->Pi and Pi->Pj
+- Channels are FIFO
+- No failure
+- All message arrive intact, and are not duplicated
+
+# Chandy-Lamport Global Snapshot Algorithm
+
+- First, initiator Pi records its own state
+- Initiator process creates special message called "Marker" messages
+    * Not an application message, does not interfere with application messages
+- For j=1 to N except i
+    Pi sends out a Marker message on outgoing channel Cij (N-1 channels)
+- Starts recording the incoming messages on each of the incoming channels at Pi: Cji (for j=1 to N except i)
+
+Wherever a process Pi receives a Marker message on an incoming channel Cki
+
+- if (this is the first Marker Pi is seeing)
+    - Pi records its own state first
+    - Marks the state of channel Cki as "empty"
+    - For j = 1 to N except i
+        * Pi sends out a Marker message on outgoing channel Cij 
+    - Starts recording the incoming messages on each of the incoming channels at Pi: Cji (for j=1 to N except i and k)
+- else // already seen a Marker message
+    - Mark the state of channel Cki as all the messages that have arrived on it since recording was turned on for Cki
+
+Terminate when all channels have stopped to record
+
+# Cuts
+
+- cut = time frontier at each process and at each channel
+- Events at the process/channel that happen before cut are "in the cut"
+    - And happening after the cut are "out of the cut"
+
+## Consistent Cuts
+
+- consistent cut: a cut that obeys causality
+    * A cut C is a consistent cut if and only if:
+        for (each pair of events e, f in the system)
+        - Such that event e is in the cut, and if f -> e (f happens-before e)
+            * Then: Event f is also in the cut C
+
+# In Fact
+
+- Any run of the Chandy-Lamport Global Snapshot algorithm creates a consistent cut
+
+# Safety and Liveness
+
+- Important properties in distributed systems
+
+## Correctness in Distributed Systems
+
+- highly desired
+- can be seen in two ways
+- Liveness and Safety
+- Often confused - it's important to distinguish from each other
+
+## Liveness
+
+ - Liveness = guarantee that something GOOD will happen, EVENTUALLY
+    * Eventually == does not imply a time bound, but if you let the system run long enough, then...
+
+    Examples:
+        - Termination - guarantee that it will terminate
+        - "Completeness" in failure detectors: every failure is eventually detected by some non faulty process
+        - In Consensus: All processes eventually decide on a value
+
+## Safety
+
+ - Safety = guarantee that something BAD will NEVER happen
+
+ Examples:
+    - There is no deadlocks in a distributed transaction system
+    - No object is orphaned in a distributed object system
+    - "Accuracy" in failure detectors
+    - In Consensus: No two processes decide of different values
+
+# Can't we guarantee both?
+
+ - Can be difficult to satisfy both liveness and safety in a asynchronous distributed system!
+    * Failure Detector: Completeness (Liveness) and Accuracy (Safety) cannot both be guaranteed by a failure detector in an asynchronous distributed system
+    * Consensus: Decisions (Liveness) and correct decisions (Safety) cannot both be guaranteed by any consensus protocol in an asynchronous distributed system
+
+# Global States
+
+ - Liveness: S satisfies Pr (property) or there is SOME casual path of global states from S to S' where S' satisfies Pr
+ - Safety: S satisfies Pr, and ALL global states S' reachable from S also satisfies Pr
+
+ # Using Global Snapshot Algorithm
+
+ - Chandy-Lamport algorithm can be used to detect global properties that are stable
+    * stable = once true, stays true forever afterwards
+
+ - Stable Liveness: Computation has terminated
+ - Stable Non-Safety: There is a deadlock or An object is orphaned (no pointers point to it)
+
+ - All stable global properties can be detected using Chandy-Lamport algorithm
+    * Due to its causal correctness 

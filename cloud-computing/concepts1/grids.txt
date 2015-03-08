@@ -1,0 +1,31 @@
+HPC - High Performance Computing
+- a lot of CPU computing compared to the data 
+- computer with 256 process
+
+DAG - Direct Acyclic Graph
+           Job 1
+- Job 0 ->       -> Job 3
+           Job 2
+
+- Job1 and Job 2 can be concurrent
+
+- 4 stages: Init, Stage In, Execute, Stage Out, Publish
+- May take several hours/days
+- Computation Intensive, so Massively Parallel
+
+# Scheduling Problem:
+
+- Intra-site protocol:
+ * HTCondor protocol
+ * Internal scheduling and allocation resources
+ * Monitoring
+ * Distribution and Publishing Files
+
+- Inter-site protocol (across site):
+ * Globus protocol
+ * External scheduling and allocating
+ * Stage In and Stage Out of Files
+ * Open Grid
+ * Globus Toolkit
+
+
