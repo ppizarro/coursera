@@ -1,0 +1,305 @@
+Concurrent & Network Software Design
+
+POSA - Pattern-oriented Software Architecture
+
+http://www.dre.vanderbilt.edu/~schmidt/CACM-patterns.html
+http://www.dre.vanderbilt.edu/~schmidt/CACM-frameworks.html
+http://www.cs.wustl.edu/~schmidt/ACE.html
+http://www.cs.wustl.edu/~schmidt/TAO.html
+http://www.dre.vanderbilt.edu/JAWS
+http://www.omg.org/corba
+http://www.omg.org/dds (data distributtion system)
+
+
+============================
+Layers architectural pattern
+
+    Applications
+
+    Domain-Specific Middleware Services
+        Exemplos: Avionics Control System, Medical Information System
+
+    Common Middleware Services
+        (domain independent)
+        distributive naming, distributive events and notification,
+        distributive security, distributive fault tolerance, replication services.
+        Exemplos: JEE, Microsoft.net various W3c web services, CORBA object services
+
+    Distribution Middleware
+        (abstrai end-to-end communication)
+        Exemplos: Korba, DDS (OMG), SOAP, web services, RPC, RMI(SUN), DCOM(Microsoft)
+
+    Host Infrastructure Middleware
+        (abstrai os varios OS: Linux, Unix, Windows, ...)
+        Exemplos: java virtual machine, ACE
+
+    Operating Systems & Protocols
+
+    Hardware
+
+Standardization groups:
+    - OMG
+    - Open Group
+    - Oasis
+    - W3C
+    - IEEE
+    - IETF
+
+================================    
+Design Dimensions:
+
+Connection-oriented X Connectionless - Protocols
+Text-based X Binary-based - Data Enconding Strategies
+Multiplexed X Nonmultiplexed Connection - Multiplexing Strategies
+Sync X ASync Message Exchange
+Message Passing X Shared Memory
+Short (UDP) X Long (TCP) duration Services
+Internal X External Services
+Monolithic X Layered/Modular Services
+Single-service X Multi-service Servers
+One-shot X Standing Servers
+Static X Dynamic Linking & Configuration
+Iterative X Concurrent Servers
+Multiprocessing X Multithreading
+Thread pool Eager Spawning Strategies: Half-Sync/Half-Async X Leader/Followers Strategy X On-demand Thread Spawning Strategy
+Kernel X User-Level Threading Models: System (1-1) X Process (N-1) contention scope X Hybrid Threading Model (N-M)
+Task-based (pipeline) X Message-based Architecture
+
+===============================
+Android
+===============================
+
+ANR - Application Not Respond
+AsyncTask
+
+Pattern - Android IPC mechanisms:
+    - Wrapper Facade
+    - Broker
+
+===============================
+Pattern
+===============================
+
+Monitor Object Pattern: http://www.dre.vanderbilt.edu/~schmidt/PDF/monitor.pdf
+The Half-Sync/Half-Async Pattern
+
+Singleton
+Double Check Blocking
+
+Observer
+Subscriber-Observer
+
+Template Method
+Strategy
+
+===============================
+GoF - Gang of Four
+===============================
+23 patterns
+
+Three purpose: Creational, Structural, Behavioral
+Two scope: class, object
+
+Proxy Pattern: IDL generator
+Observer Pattern
+
+===============================
+POSA1
+===============================
+
+Architeture Patterns
+Designs Patterns
+
+===============================
+Patterns
+===============================
+
+Proxy Pattern
+    Client representation of remote object
+    Marshall - params message
+    Demarshall - results message
+    IDL generator
+
+Broker Pattern
+    communication with proxy object with real object
+    Connection management
+    data transfer
+    concurrency
+    synchronization: synchrony & asynchrony
+    multiplexing
+    co-location optimizations
+
+Command Processor
+    Executing remote method asynchrony
+
+Observer Pattern (Publisher Subscriber Pattern)
+    pull-model X push-model
+    adding filters to narrow interests efficiently
+
+Command Processor
+
+Layer Pattern
+    Separar em camadas
+    Isolar o sitema operacional
+    Isolar a comunicação de rede
+
+Wrapper Facade Pattern
+    Ajuda o Layer Pattern com a portabilidade para diversos SOs.
+
+Object Adapter
+    Separa a logica da aplicacao de orientada a método para
+    orientada a mensagem (quando usando Broker)
+
+Component Configurator
+    possible to dynamically load and configure Factories
+    decouples component interfaces from their implementations
+    reconfigure components without shutdown and restart
+
+Abstract Factory Pattern
+    construir grupos de objetos para um mesmo domínio
+
+Strategy Pattern
+    Permite utilizar várias estratégias para resolver o problema
+
+Reactor Pattern
+    decouples the event detection, de-multiplexing, and dispatching from the parts that handle the dispatching to the application object.
+
+Acceptor-Connector
+    allow separate connection estabilishment and service handler initialization from the actual work that the service handlers do once they are connected and initialized.
+    server can be active or passive (connection)
+
+Half-Synk/Half-Async
+    separete the part that can block from the part can't block
+    more scalable
+
+Monitor Object
+    insures that there's only one method running inside an object at a time, and makes it possible to serialize and schedule the interaction of methods on that object, from different threads of control.
+    synchronized queue
+
+Leader/Followers
+    menor overhead
+    more predictible
+
+================================================================
+Pattern Complements
+    Factory Method X Disposal Method
+    Batch Method X Iterator
+
+Pattern Compounds
+    Composite Command (Composite + Command)
+    Batch Iterator (Batch + Iterator)
+
+Pattern Sequence
+    successor -> predecessor pattern
+    Strategy -> Abstract Factory -> Component Configurator
+
+Pattern Languages
+    network related patterns    
+    help to document a successive progression of design decisions
+    varios caminhos para seguir dependo do que se quer
+
+================================================================
+Frameworks
+
+- Black-box: reused by parameterizing & assembling objects (only require understanding external interfaces of objects)
+
+- White-box: reused by subclassing & overridding (require understanding the implementation to some degree)
+
+================================================================
+ACE - Adaptive Communication Environment
+
+Reactor framework: Handling synchronous events (select, poll, event-driven model)
+
+Proactor framework: Handling of asynchronous completion events
+
+Acceptor-Connector framework: Automates connection setup & service initialization 
+
+Service Configurator framework: static/dynamic configuration of service components
+
+Task framework: active objects for queueing & processing messages concurrently
+
+Streams framework: composition & processing of layered services
+    - Pipes and FIlters pattern
+    - Active Object
+
+================================================================
+JAWS - Web Server
+
+Service Access & Configuration Patterns:
+
+    - Wrapper Facade
+        Encapsulation low-level OS APIs
+
+    - Component Configurator
+        - Enhancing server (re)configurability
+        - GoF Adapter Pattern
+
+    - Activator
+        Activate and deactivate server resources dynamically
+        Minimizing unsed server resources
+        Services execution contexts
+
+    - Interceptor
+
+    - Extension Interface
+
+Event Handling Patterns:
+
+    - Reactor
+        Decoupling event demixing
+
+    - Acceptor-Connector
+        Connection management from protocol processing
+        Service initiation
+        - GoF Template Method Pattern
+
+    - Proactor
+        Using asynchronous I/O effectively
+
+    -Asynchronous Completion Token
+        Efficiently demuxing asynchronous operations & completions
+
+Concurrency Patterns:
+
+    - Active Object
+        To scale up server performance by processing each HTTP request concurrently in its own thread
+        Proxy Pattern
+        Decouples the thread tha invokes a method from the thread that executes the method
+
+    - ACE Task framework
+        Composite pattern
+
+    - Half-Sync/Half-Async
+        Scaling up performance via multi-threading
+        Decouples asynchronous & synchronous processing in concurrent systems to simplify programming without unduly reducing performance
+        It can reorder and prioritize client requests more flexibly via its request queue
+        It may be more scalable since it queues request in virtual memory
+        scalability is very important and predictibility is a plittle bit less important
+        scalability is very important and predictibility is a little bit less important
+
+    - Leader/Followers
+        minimizing multi-threading overhead
+        pool of threads to efficiently and predictably take turns accessing a  lower level set of event endpoints
+        I've got more real-time responsiveness, where predictability is more important than scalability
+
+    - Monitor Object
+        Synchronized request queue
+        Order to be able to serialize access to our request queue in a manner that will both be thread safe and also efficient.
+        Synchronizes concurrent method execution to ensure only one method at a time runs within an object
+        Allows an object's methods to cooperatively schedule their execution sequences
+
+    - Thread-Specific Storage
+
+Synchronization Patterns:
+
+    - Strategized Locking
+        Transparently parameterizing synchronization into components
+
+    - Scope Locking
+        Ensuring locks are released properly
+
+    - Thread-Safe Interface
+        Minimizing unnecessary locking
+
+    - Double-Checked Locking Optimization
+

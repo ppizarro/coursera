@@ -1,0 +1,11 @@
+There are several Java client test programs available to test the PA#3
+assignment.  One of them is available in this directory.  Another one
+(which is designed as a "stress test") is available at
+
+http://users.utcluj.ro/~visoft/teach/posa/
+
+Note that the PA#3 specification allows several implementations, so
+these test programs are intended to be used to help simplify your
+testing, rather than the "gold standard" for evaluation purposes.
+
+Doug
