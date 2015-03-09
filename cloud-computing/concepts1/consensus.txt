@@ -1,0 +1,10 @@
+# Consensus
+
+- Reliable Multicast: the ordering of messages
+- Membership/Failure Detection: the up/down status of a suspected failed process
+- Leader Election: who the leader is
+- Mutual Exclusion: who has access to the critical resource
+
+
+
+
