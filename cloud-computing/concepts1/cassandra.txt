@@ -2,19 +2,25 @@
 
  - Key -> server mapping is the Partition
 
+ - Membership algorithm: Gossip style
+
+ - Election algorithm: Zookeper (paxos)
+
+ - Ring based (like chord, without finger tables)
+
  - Replica Strategy:
 
- 1. Single Strategy
-    - Use the Partitioner, of which there are two kinds:
-        * Random Partitioner: Chord-like hash partitioning
-        * Byte Order Partitioner: Assigns ranges of keys to servers
+     1. Single Strategy
+        - Use the Partitioner, of which there are two kinds:
+            * Random Partitioner: Chord-like hash partitioning
+            * Byte Order Partitioner: Assigns ranges of keys to servers
 
- 2. Network Topology Strategy: for multi-DC deployments
-    - Two replicas per DC
-    - Three replicas per DC
-    - Per DC:
-        * First replica placed according to Patitioner
-        * Then go clockwise around ring until you hit a different rack
+     2. Network Topology Strategy: for multi-DC deployments
+        - Two replicas per DC
+        - Three replicas per DC
+        - Per DC:
+            * First replica placed according to Partitioner
+            * Then go clockwise around ring until you hit a different rack
 
  - Snitches: mechanism to map IP addresses to racks and data centers
     * SimpleSnitch: Unaware of Topology (Rack-unaware)
@@ -29,8 +35,12 @@
     * if any replica is down, the coordinator write to all other replicas and keeps the write locally until down replica comes back up.
     * When all replicas are down the Coordinator buffers writes (for up to a few hours)
     * Write-back
+    * Coordinator can store on memory and ACK immediately, fast response time and low consistency.
 
- - Bloom Filter
+ - Reads optimizations:
+    * Cache
+    * Bloom Filter
+    * Index files (maps key to position in file where the value is stored)
 
  - Cap Theorem: In a distributed system you can't guarantee all the three properties (only two):
 
