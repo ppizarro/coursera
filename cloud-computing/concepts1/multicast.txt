@@ -128,3 +128,16 @@
 
 - Not the most efficient multicast protocol, but reliable
 
+# Virtual Synchrony
+
+- Attempts to preserve multicast ordering and reliability in spite of failures
+- combines a membership protocol with a multicast protocol
+
+## Views
+
+- Each process maintains a membership list
+- The membership list is called a view
+- Update to list: View Change
+    * process join, leave, or failure
+- Virtual synchrony guarantees that all view changes are delivered in the same order at all correct processes
+
