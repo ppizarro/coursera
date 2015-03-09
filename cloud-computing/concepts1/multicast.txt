@@ -1,0 +1,130 @@
+# Multicast
+
+- Important bulding block
+
+## Ordering property of Multicast
+
+- Multicast -> message sent to a group of processes
+- Broadcast -> message sent to all processes (anywhere)
+- Unicast -> message sent from one sender process to one receiver process
+
+### FIFO ordering
+
+- Multicasts from each sender are received in the order they are sent, at all receivers
+
+- Don't worry about multicasts from different senders
+
+### Casual ordering
+
+- Multicasts whose send events are causally related, must be received in the same causality-obeying order at all receivers
+
+### Causal vs FIFO
+
+- Causal Ordering => FIFO Ordering
+
+- if two multicast M and M' are sent by process P, and M was sent before M', then M -> M'
+- Then a multicast protocol that implements causal ordering will obey FIFO ordering since M -> M'
+
+- Reverse is not true! FIFO ordering does not imply causal ordering
+
+# Total Ordering
+
+- Also known as "Atomic Broadcast"
+- Unlike FIFO and causal, this does not pay attention to order of multicast sending
+- Ensures all receivers receive all multicasts in the same order
+- If a correct process P delivers message m before m' (independently of the senders), then any other correct process P' that delivers m' would already have delivered 
+# Hybrid Variants
+
+- Since FIFO/Causal are orthogonal to Total, can have hybrid ordering protocols too
+
+- FIFO-Total hybrid protocol satisfies both FIFO and Total orders
+- Causal-Total hybrid protocol satisfies both Causal and Total orders
+
+# Implementing Multicast FIFO Ordering
+
+- Each receiver maintains a per-sender sequence number (integers)
+    * Process P1 through PN
+    * Pi maintains a vector of sequence numbers Pi[1...N] (initially all zeroes)
+    * Pi[j] is the latest sequence number Pi has received from Pj
+    * Pi[i] is the latest sequence number Pi has sent out to the other process in the group
+
+### Updating Rules
+
+ - Send multicast at process Pj:
+    - Set Pj[j] = Pj[j] + 1
+    - Include new Pj[j] in multicast message as its sequence number
+
+ - Receive multicast: if Pi receives multicast from Pj with sequence number S in message
+    - if (S == Pi[j] + 1) then
+        * deliver message to application
+        * Set Pi[j] = Pi[j] + 1
+    - else buffer this multicast until above condition is true
+
+# Implementing Multicast Total Ordering
+
+- Special process elected as leader or sequencer
+
+- Send multicast at process Pi
+    - Send multicast message M to group and sequencer
+
+- Sequencer:
+    - Maintains a global sequencer number S (initially zero)
+    - When it receives a multicast message M, it sets S = S + 1, and multicast <M,S>
+
+- Receive multicast at process Pi:
+    - Pi maintains a local received global sequence number Si (initially zero)
+    - If Pi receives a multicast M from Pj, it buffers it until it both
+        1. Pi receives <M, S(M)> from sequencer, and
+        2. Si + 1 = S(M)
+        * Then deliver it message to application and set Si = Si + 1
+
+
+# Implementing Multicast Causal Ordering
+
+- Each receiver maintains a vector of per-sender sequence numbers (integers)
+    * Similar to FIFO Multicast, but updating rules are different
+    * Process P1 through PN
+    * Pi maintains a vector Pi[1..N] (initially all zeroes)
+    * Pi[j] is the latest sequence number Pi has received from Pj
+    * Pi[i] is the latest sequence number Pi has sent out to the other process in the group
+
+### Updating Rules
+
+- Send multicast at process Pj:
+    - Set Pj[j] = Pj[j] + 1
+    - Include new entire vector Pj[1...N] in multicast message as its sequence number
+
+- Receive multicast: If Pi receives a multicast from Pj with vector M[1...N](= Pj[1...N]) in message, buffer it until both:
+    1. This message is the next one Pi is expecting from Pj, i.e.,
+        - M[j] = Pi[j] + 1
+    2. All multicasts, anywhere in the group, which happened-before M have been received at Pi, i.e.,
+        - For all k != j: M[k] <= Pi[k]
+        - i.e., Receiver satisfies causality
+    3. When above two conditions satisfied, deliverer M to application and set Pi[j] = M[j]
+
+# Reliable Multicast
+
+- Reliability is orthogonal to ordering
+- Can implement Reliable-FIFO or Reliable-Causal or Reliable-Total or Reliable-Hybrid protocols
+
+### Under Failures
+
+- O processo que falharam não importam porque todos os que estão funcionando receberam as mesmas mensagens
+- Ou todos os processos estarao corretos ou nenhum estara correto
+
+### Implementing Reliable Multicast
+
+- Let's assume we have reliable unicast (e.g., TCP) available to us
+- First-cut: Sender process (of each multicast M) sequentially sends a reliable unicast message to all group recipients
+- First-cut protocol does not satisfy reliability
+    - if sender fails, some correct processes minght receive multicast M, while other correct processes might not receive M
+
+## Really implementing Reliable Multicast
+
+- Trick: Have receivers help the sender
+
+1. Sender process (of each multicast M) sequentially sends a reliable unicast message to all group recipients
+2. When a receiver receives multicast M, it also sequentially sends M to all the group's processes
+
+- Not the most efficient multicast protocol, but reliable
+
