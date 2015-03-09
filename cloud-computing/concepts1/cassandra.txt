@@ -6,7 +6,9 @@
 
  - Election algorithm: Zookeper (paxos)
 
- - Ring based (like chord, without finger tables)
+ - Key -> Value storage: Ring based:
+    * Like chord, without finger tables
+    * With replica strategies)
 
  - Replica Strategy:
 
