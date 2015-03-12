@@ -1,10 +1,12 @@
 # Consensus
 
-- Reliable Multicast: the ordering of messages
-- Membership/Failure Detection: the up/down status of a suspected failed process
-- Leader Election: who the leader is
+- Reliable Multicast: the ordering of messages:
+    * Lamport like algorithms
+
+- Membership/Failure Detection: the up/down status of a suspected failed process:
+    * Gossip
+
+- Leader Election: who the leader is:
+    * Paxos
+
 - Mutual Exclusion: who has access to the critical resource
-
-
-
-
