@@ -45,5 +45,3 @@ Time to disseminate a gossip => O(log(n))
 
 Some implementations: AWS EC2 and S3 cloud, cassandra key-value, NNTP (News Network Transport Protocol)
 
-
-
