@@ -90,10 +90,10 @@ public:
 
 	bool recvMemberList(const char * label, void *env, char *data, int size);
 
-	void sendMemberList(enum MsgTypes msgType, Address *to);
+	void sendMemberList(const char * label, enum MsgTypes msgType, Address *to);
 
-	void memcpyMemberListEntry(char * data, MemberListEntry& member);
-	
+	int memcpyMemberListEntry(char * data, MemberListEntry& member);
+
 	void logMemberListEntry(MemberListEntry& member);
 };
 
