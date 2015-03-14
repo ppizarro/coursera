@@ -7,7 +7,7 @@
 # Membership Protocol
 
 - Failure Detector Component
-- Dessimination Component
+- Dissemination Component
 
 ## Failure Detector
 

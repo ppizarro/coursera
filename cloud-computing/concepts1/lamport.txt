@@ -1,6 +1,6 @@
 # Lamport Timestamps (logical timestamps - ordering)
 
-- important bulding blocks in distributed systems
+- important building blocks in distributed systems
 
 - timestamps obeys causality
 
@@ -17,12 +17,12 @@
     * a send (message) event carries its timestamp
     * for a receive (message) event the counter is updated by max(local clock, message timestamp) + 1
 
-- Not always IMPLYING causality: concurrent events (that's not necessarilly true)
+- Not always IMPLYING causality: concurrent events (that's not necessarily true)
 
 # Concurrent Events
 
 - A pair concurrent events doesn't have a casual path from one  to another (either way, in  the pair)
-- Lamport timestamps not guaranteed tobe ordered or unequal for concurrent events
+- Lamport timestamps not guaranteed to be ordered or unequal for concurrent events
 - ok, since concurrent events are not causality related!
 - Remember:
 
