@@ -1,7 +1,5 @@
-# My Coursera courses
+# first idea!
 
-- Cloud Computing - Concepts 1
-- Learn to Program: Crafting Quality Code
-- POSA: Pattern-oriented Software Architecture
-- Stanford Algorithms 1
+## Knowledge Structure Extrapolation
 
+based on: system design description of a Taxi Service want to get: the methodology of modelling, as a language that allows to explain the system structure that turns into function
