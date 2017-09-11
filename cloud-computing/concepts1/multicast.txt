@@ -14,7 +14,7 @@
 
 - Don't worry about multicasts from different senders
 
-### Casual ordering
+### Causal ordering
 
 - Multicasts whose send events are causally related, must be received in the same causality-obeying order at all receivers
 
@@ -33,6 +33,7 @@
 - Unlike FIFO and causal, this does not pay attention to order of multicast sending
 - Ensures all receivers receive all multicasts in the same order
 - If a correct process P delivers message m before m' (independently of the senders), then any other correct process P' that delivers m' would already have delivered 
+
 # Hybrid Variants
 
 - Since FIFO/Causal are orthogonal to Total, can have hybrid ordering protocols too

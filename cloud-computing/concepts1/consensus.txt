@@ -8,5 +8,8 @@
 
 - Leader Election: who the leader is:
     * Paxos
+    - Paxos:
+        * Safety: No two non-faulty processes decide different values
+        * Eventual liveness: consensus will be achieved...sometime... or not :-)
 
 - Mutual Exclusion: who has access to the critical resource
