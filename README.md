@@ -1,5 +1,4 @@
-# My Coursera courses
-
+fix the typo
 - Cloud Computing - Concepts 1
 - Learn to Program: Crafting Quality Code
 - POSA: Pattern-oriented Software Architecture
