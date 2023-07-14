@@ -4,4 +4,5 @@
 - Learn to Program: Crafting Quality Code
 - POSA: Pattern-oriented Software Architecture
 - Stanford Algorithms 1
+- correct
 
